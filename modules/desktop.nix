@@ -1,40 +1,40 @@
 { pkgs, ... }:
 
 let
-  qtile = (
-    pkgs.python312Packages.qtile.override {
+  qtile =
+    (pkgs.python312Packages.qtile.override {
       extraPackages = [ ];
-    }
-  ).overridePythonAttrs (_old: {
-    doCheck = false;
-    doInstallCheck = false;
-  });
+    }).overridePythonAttrs
+      (_old: {
+        doCheck = false;
+        doInstallCheck = false;
+      });
 
   qtileWaylandSession =
-    (pkgs.writeTextDir
-      "share/wayland-sessions/qtile-wayland.desktop"
-      ''
-        [Desktop Entry]
-        Name=Qtile (Wayland)
-        Comment=Qtile Wayland Session
-        Exec=${qtile}/bin/qtile start -b wayland
-        Type=Application
-        DesktopNames=Qtile
-      ''
-    ).overrideAttrs (_: {
-      passthru.providedSessions = [ "qtile-wayland" ];
-    });
+    (pkgs.writeTextDir "share/wayland-sessions/qtile-wayland.desktop" ''
+      [Desktop Entry]
+      Name=Qtile (Wayland)
+      Comment=Qtile Wayland Session
+      Exec=${qtile}/bin/qtile start -b wayland
+      Type=Application
+      DesktopNames=Qtile
+    '').overrideAttrs
+      (_: {
+        passthru.providedSessions = [ "qtile-wayland" ];
+      });
 
 in
 {
-  services.displayManager.sessionPackages = [
-    qtileWaylandSession
-  ];
-  services.displayManager.defaultSession = "qtile-wayland";
+  services.displayManager = {
+    sessionPackages = [
+      qtileWaylandSession
+    ];
+    defaultSession = "qtile-wayland";
 
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
+    sddm = {
+      enable = true;
+      wayland.enable = true;
+    };
   };
 
   programs.firefox.enable = true;

@@ -37,6 +37,8 @@ readlink -f /run/current-system/sw/bin/qtile
 ## Repository layout
 
 - `flake.nix`: NixOS flake entrypoint and Home Manager wiring.
+- `justfile`: local operational commands for build, switch, check, lint and cleanup.
+- `.envrc`: direnv entrypoint for the flake dev shell.
 - `hosts/valdore/configuration.nix`: host-level imports and host identity.
 - `hosts/valdore/hardware.nix`: host hardware entrypoint and CPU-specific settings.
 - `hosts/valdore/hardware-configuration.nix`: generated filesystem and device config.
@@ -79,6 +81,22 @@ are not opened by default.
 
 The interactive login shell is Zsh. Bash remains configured so scripts and
 manual Bash sessions keep the same aliases.
+
+Operational workflows are centered around `just` and `nh`:
+
+- `just build`: build the host configuration.
+- `just switch`: build and activate the host configuration.
+- `just test`: activate the host configuration until the next reboot.
+- `just check`: run flake checks.
+- `just fmt`: format Nix files through the flake formatter.
+- `just lint`: run `statix` and `deadnix`.
+- `just diff`: compare the running system against the latest build result.
+- `just gc`: clean old Nix generations and stale roots through `nh`.
+- `just update`: update flake inputs.
+
+`nix-index-database` provides a prebuilt `nix-locate` database and comma
+integration. Use `, <command>` to run an uninstalled command from nixpkgs for
+one-off tasks.
 
 The desktop layout is fixed to:
 
@@ -162,8 +180,10 @@ come from the shared palette.
 Useful checks after desktop or tooling changes:
 
 ```sh
-sudo nixos-rebuild build --flake /etc/nixos#valdore
-sudo nixos-rebuild switch --flake /etc/nixos#valdore
+just build
+just switch
+just check
+just lint
 qtile check -c /home/tim/.config/qtile/config.py
 foot --check-config
 tmux -f /home/tim/.config/tmux/tmux.conf new-session -d -s verify true

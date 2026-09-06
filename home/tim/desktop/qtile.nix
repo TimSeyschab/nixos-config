@@ -167,8 +167,10 @@ in
     wlr-randr
   ];
 
-  xdg.configFile."qtile/config.py".source = ./qtile/config.py;
-  xdg.configFile."qtile/theme.py".source = qtileTheme;
-  xdg.configFile."qtile/README.md".source = ./qtile/README.md;
-  xdg.configFile."qtile/wallpaper.png".source = wallpaper;
+  xdg.configFile = {
+    "qtile/config.py".source = ./qtile/config.py;
+    "qtile/theme.py".source = qtileTheme;
+    "qtile/README.md".source = ./qtile/README.md;
+    "qtile/wallpaper.png".source = wallpaper;
+  };
 }

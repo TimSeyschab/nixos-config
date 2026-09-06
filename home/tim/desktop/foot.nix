@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 let
   palette = import ./palette.nix;
