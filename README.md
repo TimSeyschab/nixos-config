@@ -36,6 +36,23 @@ readlink -f /run/current-system/sw/bin/qtile
 
 ## Workstation conventions
 
+## Repository layout
+
+- `flake.nix`: NixOS flake entrypoint and Home Manager wiring.
+- `hosts/valdore/configuration.nix`: host-level imports and host identity.
+- `hosts/valdore/hardware.nix`: host hardware entrypoint and CPU-specific settings.
+- `hosts/valdore/hardware-configuration.nix`: generated filesystem and device config.
+- `modules/boot.nix`: bootloader and kernel package selection.
+- `modules/nix.nix`: Nix and nixpkgs policy.
+- `modules/networking.nix`: NetworkManager and SSH.
+- `modules/audio.nix`: PipeWire audio stack.
+- `modules/desktop.nix`: SDDM, Qtile Wayland session and desktop portals.
+- `modules/nvidia.nix`: NVIDIA driver and graphics settings.
+- `modules/development.nix`: Docker daemon and system-level development services.
+- `modules/packages.nix`: baseline system packages.
+- `modules/users.nix`: local user accounts and groups.
+- `home/tim/home.nix`: Home Manager entrypoint for `tim`.
+
 JetBrains IDEs are managed through JetBrains Toolbox. Launch Toolbox from Wofi
 and install IntelliJ IDEA Ultimate there; IDEs installed by Toolbox should also
 be started through Toolbox.

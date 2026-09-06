@@ -37,6 +37,8 @@ in
     wayland.enable = true;
   };
 
+  programs.firefox.enable = true;
+
   environment.systemPackages = with pkgs; [
     qtile
     foot
