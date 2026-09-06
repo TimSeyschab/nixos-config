@@ -120,14 +120,6 @@ let
     exec ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1
   '';
 
-  wallpaper = pkgs.runCommand "valdore-wallpaper.png" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
-    ${pkgs.imagemagick}/bin/magick -size 5120x2160 gradient:'${hex "base00"}'-'${hex "base01"}' \
-      -fill '${hex "base0D"}22' -draw 'rectangle 0,1680 5120,1710' \
-      -fill '${hex "base0B"}18' -draw 'rectangle 0,1718 5120,1730' \
-      -fill '${hex "base0A"}14' -draw 'rectangle 0,1736 5120,1742' \
-      $out
-  '';
-
   qtileTheme = pkgs.writeText "qtile-theme.py" ''
     palette = {
         "bg": "${hex "base00"}",
@@ -149,7 +141,10 @@ let
     font = "Inter"
     font_size = 14
 
-    wallpaper = "~/.config/qtile/wallpaper.png"
+    wallpapers = {
+        "DP-1": "~/.config/qtile/wallpaper-dp1.png",
+        "HDMI-A-1": "~/.config/qtile/wallpaper-hdmi.png",
+    }
   '';
 in
 {
@@ -180,6 +175,7 @@ in
     "qtile/config.py".source = ./qtile/config.py;
     "qtile/theme.py".source = qtileTheme;
     "qtile/README.md".source = ./qtile/README.md;
-    "qtile/wallpaper.png".source = wallpaper;
+    "qtile/wallpaper-dp1.png".source = ./wallpapers/valdore-programming-dp1.png;
+    "qtile/wallpaper-hdmi.png".source = ./wallpapers/valdore-programming-hdmi.png;
   };
 }

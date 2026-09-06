@@ -6,7 +6,7 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from qtile_extras import widget as extra_widget
 
-from theme import bar_size, border_width, font, font_size, margin, palette, wallpaper
+from theme import bar_size, border_width, font, font_size, margin, palette, wallpapers
 
 mod = "mod4"
 terminal = "foot"
@@ -35,7 +35,10 @@ def spawn_once(command, marker):
 def autostart():
     subprocess.Popen("qtile-apply-display-scale", shell=True)
     subprocess.Popen("sh -c 'sleep 2; qtile cmd-obj -o cmd -f to_screen -a 1'", shell=True)
-    subprocess.Popen(f"swaybg -i {os.path.expanduser(wallpaper)} -m fill", shell=True)
+    wallpaper_args = []
+    for output, path in wallpapers.items():
+        wallpaper_args.extend(["-o", output, "-i", os.path.expanduser(path), "-m", "fill"])
+    subprocess.Popen(["swaybg", *wallpaper_args])
     spawn_once("mako", "mako")
     spawn_once("nm-applet --indicator", "nm-applet")
     spawn_once("qtile-polkit-agent", "polkit-gnome-authentication-agent-1")
