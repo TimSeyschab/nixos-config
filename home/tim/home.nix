@@ -9,6 +9,7 @@
     ./desktop/mako.nix
     ./desktop/qtile.nix
     ./desktop/wofi.nix
+    ./programs/neovim.nix
     ./programs/tmux.nix
     ./shell/aliases.nix
     ./shell/zsh.nix

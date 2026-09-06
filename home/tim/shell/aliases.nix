@@ -22,6 +22,7 @@ let
     tma = "tmux attach -t";
     tml = "tmux list-sessions";
     tns = "tmux new-session -s";
+    v = "nvim";
   };
 in
 

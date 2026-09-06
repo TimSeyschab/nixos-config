@@ -1,4 +1,4 @@
-{ pkgsUnstable, ... }:
+{ pkgs, ... }:
 
 {
   boot = {
@@ -7,6 +7,6 @@
       efi.canTouchEfiVariables = true;
     };
 
-    kernelPackages = pkgsUnstable.linuxPackages_7_1;
+    kernelPackages = pkgs.linuxPackages;
   };
 }

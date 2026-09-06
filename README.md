@@ -105,6 +105,11 @@ Kustomize or manifest validation, `kind-up`/`kind-down` for disposable local
 clusters, `go-check` for Go formatting/tests/linting and `java-check` for
 Gradle or Maven test runs.
 
+Neovim is the default editor and is configured through Home Manager. Plugins and
+language servers are Nix-managed, with LSP, completion, Treesitter, Telescope,
+Git signs, diagnostics and format-on-save for Nix, Kubernetes/YAML, Go, Java,
+Shell, Lua, JSON, Markdown and TOML.
+
 The desktop layout is fixed to:
 
 - `HDMI-A-1`: secondary 1080p display, `100%`, position `0,0`.
@@ -162,6 +167,7 @@ come from the shared palette.
 - `tml`: `tmux list-sessions`
 - `tma`: `tmux attach -t`
 - `tns`: `tmux new-session -s`
+- `v`: `nvim`
 
 ### Shell workflow
 
@@ -207,4 +213,5 @@ go version
 java -version
 mvn --version
 gradle --version
+nvim --headless "+checkhealth vim.lsp" +qa
 ```
