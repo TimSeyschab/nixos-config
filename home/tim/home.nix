@@ -11,6 +11,7 @@
     ./desktop/wofi.nix
     ./programs/tmux.nix
     ./shell/aliases.nix
+    ./shell/zsh.nix
   ];
 
   home.username = "tim";

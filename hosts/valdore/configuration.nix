@@ -7,6 +7,7 @@
     ../../modules/boot.nix
     ../../modules/desktop.nix
     ../../modules/development.nix
+    ../../modules/gaming.nix
     ../../modules/networking.nix
     ../../modules/nix.nix
     ../../modules/nvidia.nix

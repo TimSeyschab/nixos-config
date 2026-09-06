@@ -33,6 +33,7 @@ def spawn_once(command, marker):
 @hook.subscribe.startup_once
 def autostart():
     subprocess.Popen("qtile-apply-display-scale", shell=True)
+    subprocess.Popen("sh -c 'sleep 2; qtile cmd-obj -o cmd -f to_screen -a 1'", shell=True)
     subprocess.Popen(f"swaybg -i {os.path.expanduser(wallpaper)} -m fill", shell=True)
     spawn_once("mako", "mako")
     spawn_once("nm-applet --indicator", "nm-applet")
@@ -178,8 +179,8 @@ def make_bar(primary=False):
 
 
 screens = [
-    Screen(top=make_bar(primary=True), background=palette["bg"]),
     Screen(top=make_bar(), background=palette["bg"]),
+    Screen(top=make_bar(primary=True), background=palette["bg"]),
 ]
 
 mouse = [

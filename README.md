@@ -47,6 +47,7 @@ readlink -f /run/current-system/sw/bin/qtile
 - `modules/desktop.nix`: SDDM, Qtile Wayland session and desktop portals.
 - `modules/nvidia.nix`: NVIDIA driver and graphics settings.
 - `modules/development.nix`: Docker daemon and system-level development services.
+- `modules/gaming.nix`: Steam, Steam Gamescope session and GameMode.
 - `modules/packages.nix`: baseline system packages.
 - `modules/users.nix`: local user accounts and groups.
 - `home/tim/home.nix`: Home Manager entrypoint for `tim`.
@@ -54,6 +55,8 @@ readlink -f /run/current-system/sw/bin/qtile
 - `home/tim/desktop/qtile/config.py`: Qtile behavior, keys, screens and widgets.
 - `home/tim/desktop/qtile/theme.py`: Qtile palette, font and sizing values.
 - `home/tim/programs/tmux.nix`: tmux configuration, plugins and helper scripts.
+- `home/tim/shell/aliases.nix`: shared Bash/Zsh aliases.
+- `home/tim/shell/zsh.nix`: Zsh, prompt and interactive shell tooling.
 
 ## Workstation conventions
 
@@ -63,6 +66,13 @@ be started through Toolbox.
 
 Docker is configured in the classic mode with the system Docker daemon and the
 `tim` user in the `docker` group.
+
+Steam is enabled through the NixOS Steam module. Remote Play and local network
+game transfers are allowed through the firewall; Source Dedicated Server ports
+are not opened by default.
+
+The interactive login shell is Zsh. Bash remains configured so scripts and
+manual Bash sessions keep the same aliases.
 
 The desktop layout is fixed to:
 
@@ -96,6 +106,10 @@ theme changes in `home/tim/desktop/qtile/theme.py` and runtime helper scripts in
 
 ### Shell aliases
 
+- `l`: detailed `eza` listing.
+- `ll`: compact long `eza` listing.
+- `la`: all files with git metadata.
+- `rgf`: `rg --files`
 - `k`: `kubectl`
 - `kgp`: `kubectl get pods -o wide`
 - `kctx`: `kubectx`
@@ -108,6 +122,14 @@ theme changes in `home/tim/desktop/qtile/theme.py` and runtime helper scripts in
 - `tml`: `tmux list-sessions`
 - `tma`: `tmux attach -t`
 - `tns`: `tmux new-session -s`
+
+### Shell workflow
+
+- `Ctrl-r`: fuzzy history search.
+- `Ctrl-t`: fuzzy file insertion.
+- `Alt-c`: fuzzy directory change.
+- `z <path-fragment>`: jump with zoxide.
+- `direnv allow`: enable project-local development environments.
 
 ### tmux
 

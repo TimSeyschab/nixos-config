@@ -9,8 +9,8 @@ let
     fi
 
     sleep 1
-    ${pkgs.wlr-randr}/bin/wlr-randr --output DP-1 --scale 1.25 --pos 0,0 || true
-    ${pkgs.wlr-randr}/bin/wlr-randr --output HDMI-A-1 --scale 1 --pos 3072,0 || true
+    ${pkgs.wlr-randr}/bin/wlr-randr --output HDMI-A-1 --scale 1 --pos 0,0 || true
+    ${pkgs.wlr-randr}/bin/wlr-randr --output DP-1 --scale 1.25 --pos 1920,0 || true
   '';
 
   screenshotArea = pkgs.writeShellScriptBin "qtile-screenshot-area" ''
