@@ -1,6 +1,9 @@
 { pkgs, ... }:
 
 let
+  palette = import ../desktop/palette.nix;
+  hex = name: "#${palette.${name}}";
+
   tmuxWork = pkgs.writeShellApplication {
     name = "tmux-work";
     runtimeInputs = [ pkgs.tmux ];
@@ -97,12 +100,12 @@ in
       set -g set-clipboard on
       set -ga terminal-overrides ",xterm-256color:RGB,foot:RGB,tmux-256color:RGB"
 
-      set -g status-style "bg=#101418,fg=#d8dee9"
+      set -g status-style "bg=${hex "base00"},fg=${hex "base05"}"
       set -g status-left-length 48
       set -g status-right-length 120
-      set -g status-left "#[fg=#61afef,bold] #S #[fg=#3b4252]|"
-      set -g status-right "#[fg=#98c379]#(hostname) #[fg=#3b4252]| #[fg=#e5c07b]%Y-%m-%d %H:%M "
-      setw -g window-status-current-style "fg=#101418,bg=#61afef,bold"
+      set -g status-left "#[fg=${hex "base0D"},bold] #S #[fg=${hex "base03"}]|"
+      set -g status-right "#[fg=${hex "base0B"}]#(hostname) #[fg=${hex "base03"}]| #[fg=${hex "base0A"}]%Y-%m-%d %H:%M "
+      setw -g window-status-current-style "fg=${hex "base00"},bg=${hex "base0D"},bold"
       setw -g window-status-current-format " #I:#W "
       setw -g window-status-format " #I:#W "
 

@@ -49,11 +49,13 @@ readlink -f /run/current-system/sw/bin/qtile
 - `modules/development.nix`: Docker daemon and system-level development services.
 - `modules/gaming.nix`: Steam, Steam Gamescope session and GameMode.
 - `modules/packages.nix`: baseline system packages.
+- `modules/secrets.nix`: sops-nix foundation and secret tooling.
+- `modules/style.nix`: Stylix system theme, fonts and cursor defaults.
 - `modules/users.nix`: local user accounts and groups.
 - `home/tim/home.nix`: Home Manager entrypoint for `tim`.
+- `home/tim/desktop/palette.nix`: shared Base16 color palette for Stylix and desktop configs.
 - `home/tim/desktop/qtile.nix`: Qtile helper scripts and Home Manager links.
 - `home/tim/desktop/qtile/config.py`: Qtile behavior, keys, screens and widgets.
-- `home/tim/desktop/qtile/theme.py`: Qtile palette, font and sizing values.
 - `home/tim/programs/tmux.nix`: tmux configuration, plugins and helper scripts.
 - `home/tim/shell/aliases.nix`: shared Bash/Zsh aliases.
 - `home/tim/shell/zsh.nix`: Zsh, prompt and interactive shell tooling.
@@ -67,6 +69,10 @@ be started through Toolbox.
 Docker is configured in the classic mode with the system Docker daemon and the
 `tim` user in the `docker` group.
 
+Secrets are managed through sops-nix. The host SSH Ed25519 key is configured as
+an age identity for decrypting machine secrets during activation. Commit only
+encrypted `*.sops.*` files, never plaintext secrets.
+
 Steam is enabled through the NixOS Steam module. Remote Play and local network
 game transfers are allowed through the firewall; Source Dedicated Server ports
 are not opened by default.
@@ -76,12 +82,17 @@ manual Bash sessions keep the same aliases.
 
 The desktop layout is fixed to:
 
-- `DP-1`: primary 4K display, `125%`, position `0,0`.
-- `HDMI-A-1`: secondary 1080p display, `100%`, position `3072,0`.
+- `HDMI-A-1`: secondary 1080p display, `100%`, position `0,0`.
+- `DP-1`: primary 4K display, `125%`, position `1920,0`.
 
-Qtile uses a restrained dark palette with blue, green and yellow accents. Keep
-theme changes in `home/tim/desktop/qtile/theme.py` and runtime helper scripts in
-`home/tim/desktop/qtile.nix`.
+The desktop uses a restrained dark palette with blue, green and yellow accents.
+Keep color changes in `home/tim/desktop/palette.nix`. Stylix, Qtile, foot, mako,
+wofi and tmux consume that shared palette; Qtile still receives a runtime
+`theme.py`, but Home Manager generates it from the palette.
+
+Stylix provides shared system theme defaults, fonts and cursor settings. Tools
+with custom layout or behavior still keep their own modules, but their colors
+come from the shared palette.
 
 ## Shortcuts and aliases
 

@@ -1,5 +1,9 @@
 { pkgs, ... }:
 
+let
+  palette = import ./palette.nix;
+in
+
 {
   home.packages = [
     pkgs.wofi
@@ -18,18 +22,18 @@
   xdg.configFile."wofi/style.css".text = ''
     window {
       margin: 0;
-      border: 2px solid #3b4252;
-      background-color: rgba(16, 20, 24, 0.98);
-      font-family: sans-serif;
+      border: 2px solid #${palette.base03};
+      background-color: #${palette.base00}fa;
+      font-family: Inter, sans-serif;
       font-size: 15px;
     }
 
     #input {
       margin: 12px;
       padding: 10px 12px;
-      border: 1px solid #4c566a;
-      color: #e5e9f0;
-      background-color: #1b2229;
+      border: 1px solid #${palette.base03};
+      color: #${palette.base06};
+      background-color: #${palette.base01};
     }
 
     #inner-box, #outer-box, #scroll {
@@ -39,12 +43,12 @@
 
     #entry {
       padding: 8px 12px;
-      color: #d8dee9;
+      color: #${palette.base05};
     }
 
     #entry:selected {
-      background-color: #2f5f8f;
-      color: #ffffff;
+      background-color: #${palette.base0D};
+      color: #${palette.base07};
     }
   '';
 }

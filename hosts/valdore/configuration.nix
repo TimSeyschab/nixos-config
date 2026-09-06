@@ -12,6 +12,8 @@
     ../../modules/nix.nix
     ../../modules/nvidia.nix
     ../../modules/packages.nix
+    ../../modules/secrets.nix
+    ../../modules/style.nix
     ../../modules/users.nix
   ];
 

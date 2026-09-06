@@ -1,6 +1,9 @@
 { pkgs, ... }:
 
 let
+  palette = import ./palette.nix;
+  hex = name: "#${palette.${name}}";
+
   applyDisplayScale = pkgs.writeShellScriptBin "qtile-apply-display-scale" ''
     set -eu
 
@@ -109,11 +112,35 @@ let
   '';
 
   wallpaper = pkgs.runCommand "valdore-wallpaper.png" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
-    ${pkgs.imagemagick}/bin/magick -size 5120x2160 gradient:'#101418'-'#16212b' \
-      -fill '#61afef22' -draw 'rectangle 0,1680 5120,1710' \
-      -fill '#98c37918' -draw 'rectangle 0,1718 5120,1730' \
-      -fill '#e5c07b14' -draw 'rectangle 0,1736 5120,1742' \
+    ${pkgs.imagemagick}/bin/magick -size 5120x2160 gradient:'${hex "base00"}'-'${hex "base01"}' \
+      -fill '${hex "base0D"}22' -draw 'rectangle 0,1680 5120,1710' \
+      -fill '${hex "base0B"}18' -draw 'rectangle 0,1718 5120,1730' \
+      -fill '${hex "base0A"}14' -draw 'rectangle 0,1736 5120,1742' \
       $out
+  '';
+
+  qtileTheme = pkgs.writeText "qtile-theme.py" ''
+    palette = {
+        "bg": "${hex "base00"}",
+        "bg_alt": "${hex "base01"}",
+        "panel": "${hex "base02"}",
+        "fg": "${hex "base05"}",
+        "muted": "${hex "base04"}",
+        "blue": "${hex "base0D"}",
+        "green": "${hex "base0B"}",
+        "yellow": "${hex "base0A"}",
+        "red": "${hex "base08"}",
+        "border": "${hex "base03"}",
+    }
+
+    bar_size = 34
+    border_width = 2
+    margin = 8
+
+    font = "Inter"
+    font_size = 14
+
+    wallpaper = "~/.config/qtile/wallpaper.png"
   '';
 in
 {
@@ -141,7 +168,7 @@ in
   ];
 
   xdg.configFile."qtile/config.py".source = ./qtile/config.py;
-  xdg.configFile."qtile/theme.py".source = ./qtile/theme.py;
+  xdg.configFile."qtile/theme.py".source = qtileTheme;
   xdg.configFile."qtile/README.md".source = ./qtile/README.md;
   xdg.configFile."qtile/wallpaper.png".source = wallpaper;
 }

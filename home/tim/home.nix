@@ -39,6 +39,16 @@
     CLUTTER_BACKEND = "wayland";
   };
 
+  stylix.targets = {
+    font-packages.enable = true;
+    fontconfig.enable = true;
+    gtk.enable = true;
+    qt.enable = true;
+
+    foot.enable = false;
+    tmux.enable = false;
+  };
+
   xdg.userDirs = {
     enable = true;
     createDirectories = true;

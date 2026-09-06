@@ -1,27 +1,31 @@
 { ... }:
 
+let
+  palette = import ./palette.nix;
+in
+
 {
   programs.foot = {
     enable = true;
     settings = {
       main = {
-        font = "monospace:size=12";
+        font = "JetBrainsMono Nerd Font:size=12";
         pad = "12x12";
         dpi-aware = "yes";
       };
       scrollback.lines = 10000;
       colors-dark = {
-        alpha = "0.96";
-        background = "101418";
-        foreground = "d8dee9";
-        regular0 = "101418";
-        regular1 = "e06c75";
-        regular2 = "98c379";
-        regular3 = "e5c07b";
-        regular4 = "61afef";
-        regular5 = "c678dd";
-        regular6 = "56b6c2";
-        regular7 = "d8dee9";
+        alpha = palette.opacity.terminal;
+        background = palette.base00;
+        foreground = palette.base05;
+        regular0 = palette.base00;
+        regular1 = palette.base08;
+        regular2 = palette.base0B;
+        regular3 = palette.base0A;
+        regular4 = palette.base0D;
+        regular5 = palette.base0E;
+        regular6 = palette.base0C;
+        regular7 = palette.base05;
       };
     };
   };
