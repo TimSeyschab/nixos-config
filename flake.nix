@@ -82,11 +82,18 @@
         packages = with pkgs; [
           age
           deadnix
+          delve
           git
+          go
+          golangci-lint
+          gopls
+          gradle
           just
+          jdk25
           nh
           nix-output-monitor
           nixfmt
+          maven
           sops
           statix
         ];

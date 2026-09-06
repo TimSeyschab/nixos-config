@@ -98,6 +98,13 @@ Operational workflows are centered around `just` and `nh`:
 integration. Use `, <command>` to run an uninstalled command from nixpkgs for
 one-off tasks.
 
+Kubernetes, Go and Java development tooling is installed through Home Manager.
+Java uses JDK 25 as the current LTS line and exports `JAVA_HOME` accordingly.
+Use `kube-doctor` for local cluster diagnostics, `kube-validate` for Helm,
+Kustomize or manifest validation, `kind-up`/`kind-down` for disposable local
+clusters, `go-check` for Go formatting/tests/linting and `java-check` for
+Gradle or Maven test runs.
+
 The desktop layout is fixed to:
 
 - `HDMI-A-1`: secondary 1080p display, `100%`, position `0,0`.
@@ -144,7 +151,11 @@ come from the shared palette.
 - `kctx`: `kubectx`
 - `kns`: `kubens`
 - `h`: `helm`
+- `kd`: `kube-doctor`
 - `tf`: `tofu`
+- `kv`: `kube-validate`
+- `goc`: `go-check`
+- `jc`: `java-check`
 - `d`: `docker`
 - `dc`: `docker compose`
 - `dps`: formatted `docker ps`
@@ -191,4 +202,9 @@ docker version
 kubectl version --client=true
 helm version --short
 tofu version
+kube-doctor
+go version
+java -version
+mvn --version
+gradle --version
 ```
