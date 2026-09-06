@@ -2,12 +2,14 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, pkgsUnstable, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../../modules/nvidia.nix
+      ../../modules/desktop.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -15,9 +17,11 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   hardware.cpu.intel.updateMicrocode = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgsUnstable.linuxPackages_7_1;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nixpkgs.config.allowUnfree = true;
+
 
   networking.hostName = "valdore"; # Define your hostname.
 
