@@ -4,6 +4,7 @@ import subprocess
 from libqtile import bar, hook, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
+from qtile_extras import widget as extra_widget
 
 from theme import bar_size, border_width, font, font_size, margin, palette, wallpaper
 
@@ -161,7 +162,24 @@ def make_bar(primary=False):
     ]
 
     if primary:
-        widgets.extend([widget.StatusNotifier(icon_size=18, padding=4), sep()])
+        widgets.extend(
+            [
+                extra_widget.StatusNotifier(
+                    icon_size=18,
+                    padding=4,
+                    menu_background=palette["bg"],
+                    menu_foreground=palette["fg"],
+                    menu_foreground_disabled=palette["muted"],
+                    menu_foreground_highlighted=palette["bg"],
+                    menu_background_highlighted=palette["blue"],
+                    menu_border=palette["border"],
+                    menu_border_width=0,
+                    menu_font=font,
+                    menu_fontsize=font_size,
+                ),
+                sep(),
+            ]
+        )
 
     widgets.extend(
         [

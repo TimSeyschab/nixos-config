@@ -1,9 +1,16 @@
 { pkgs, ... }:
 
 let
+  qtileExtras = pkgs.python3Packages.qtile-extras.overridePythonAttrs (_old: {
+    doCheck = false;
+    pythonImportsCheck = [ ];
+  });
+
   qtile =
     (pkgs.python3Packages.qtile.override {
-      extraPackages = [ ];
+      extraPackages = [
+        qtileExtras
+      ];
     }).overridePythonAttrs
       (_old: {
         doCheck = false;
