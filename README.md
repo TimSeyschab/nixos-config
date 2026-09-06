@@ -2,38 +2,6 @@
 
 This repository contains the NixOS and Home Manager configuration for `valdore`.
 
-## Known issue: Python 3.13 cairocffi segfault
-
-On this machine, `python3.13 -c 'import cairocffi'` segfaults reproducibly. The
-same failure also affected Qtile because Qtile imports Python graphics bindings
-through its dependency stack.
-
-Observed behavior:
-
-- `python3.13 -c 'import cairocffi'` crashes with `SIGSEGV`.
-- Repeated `qtile help` runs crashed when Qtile was built with Python 3.13.
-- `python3.12 -c 'import cairocffi'` was stable in repeated runs.
-- Qtile built against Python 3.12 was stable in repeated `qtile help` runs.
-
-Current workaround:
-
-- `modules/desktop.nix` pins Qtile to `pkgs.python312Packages.qtile`.
-- `home/tim/apps/citrix.nix` overrides unstable `auto-patchelf` to use
-  `pkgs.python312`, because the Citrix 26.04 package build path otherwise hit
-  Python 3.13/3.14 tooling failures.
-
-Do not remove these Python 3.12 overrides until `cairocffi` and the affected
-Python tooling are verified stable again on this host.
-
-Useful checks:
-
-```sh
-python3.13 -c 'import cairocffi'
-python3.12 -c 'import cairocffi'
-qtile help
-readlink -f /run/current-system/sw/bin/qtile
-```
-
 ## Repository layout
 
 - `flake.nix`: NixOS flake entrypoint and Home Manager wiring.

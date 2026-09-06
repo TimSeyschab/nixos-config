@@ -2,7 +2,7 @@
 
 let
   qtile =
-    (pkgs.python312Packages.qtile.override {
+    (pkgs.python3Packages.qtile.override {
       extraPackages = [ ];
     }).overridePythonAttrs
       (_old: {
