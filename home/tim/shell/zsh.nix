@@ -96,7 +96,12 @@
 
           fzf-history-widget() {
             local selected
-            selected=$(fc -rl 1 | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//' | awk '!seen[$0]++' | fzf --height 40% --reverse --query "$LBUFFER") || return
+            selected="$(
+              fc -rl 1 \
+                | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//' \
+                | awk '!seen[$0]++' \
+                | fzf --height 40% --reverse --query "$LBUFFER"
+            )" || return
             LBUFFER=$selected
             zle reset-prompt
           }

@@ -76,7 +76,16 @@ let
     set -eu
 
     ${pkgs.networkmanager}/bin/nmcli -t -f DEVICE,TYPE,STATE device status \
-      | ${pkgs.gawk}/bin/awk -F: '$3 == "connected" && $2 != "loopback" { print toupper($2) " " $1; found=1; exit } END { if (!found) print "NET down" }'
+      | ${pkgs.gawk}/bin/awk -F: '
+        $3 == "connected" && $2 != "loopback" {
+          print toupper($2) " " $1
+          found = 1
+          exit
+        }
+        END {
+          if (!found) print "NET down"
+        }
+      '
   '';
 
   dockerStatus = pkgs.writeShellScriptBin "qtile-docker-status" ''
