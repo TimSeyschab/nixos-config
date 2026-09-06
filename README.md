@@ -34,8 +34,6 @@ qtile help
 readlink -f /run/current-system/sw/bin/qtile
 ```
 
-## Workstation conventions
-
 ## Repository layout
 
 - `flake.nix`: NixOS flake entrypoint and Home Manager wiring.
@@ -52,6 +50,12 @@ readlink -f /run/current-system/sw/bin/qtile
 - `modules/packages.nix`: baseline system packages.
 - `modules/users.nix`: local user accounts and groups.
 - `home/tim/home.nix`: Home Manager entrypoint for `tim`.
+- `home/tim/desktop/qtile.nix`: Qtile helper scripts and Home Manager links.
+- `home/tim/desktop/qtile/config.py`: Qtile behavior, keys, screens and widgets.
+- `home/tim/desktop/qtile/theme.py`: Qtile palette, font and sizing values.
+- `home/tim/programs/tmux.nix`: tmux configuration, plugins and helper scripts.
+
+## Workstation conventions
 
 JetBrains IDEs are managed through JetBrains Toolbox. Launch Toolbox from Wofi
 and install IntelliJ IDEA Ultimate there; IDEs installed by Toolbox should also
@@ -64,6 +68,10 @@ The desktop layout is fixed to:
 
 - `DP-1`: primary 4K display, `125%`, position `0,0`.
 - `HDMI-A-1`: secondary 1080p display, `100%`, position `3072,0`.
+
+Qtile uses a restrained dark palette with blue, green and yellow accents. Keep
+theme changes in `home/tim/desktop/qtile/theme.py` and runtime helper scripts in
+`home/tim/desktop/qtile.nix`.
 
 ## Shortcuts and aliases
 
@@ -109,6 +117,25 @@ The desktop layout is fixed to:
 - `tmux-longrun <session> <command> [args...]`: run a long command inside a named session.
 - `Ctrl-b |`: split horizontally in the current path.
 - `Ctrl-b -`: split vertically in the current path.
+- `Ctrl-b c`: create a new window in the current path.
 - `Alt-h/j/k/l`: move between panes.
 - `Alt-H/J/K/L`: resize panes.
 - `Ctrl-b [` then `v`/`y`: vi copy-mode selection and copy to Wayland clipboard.
+- `Ctrl-b Ctrl-s`: save session state with tmux-resurrect.
+- `Ctrl-b Ctrl-r`: restore session state with tmux-resurrect.
+
+## Validation
+
+Useful checks after desktop or tooling changes:
+
+```sh
+sudo nixos-rebuild build --flake /etc/nixos#valdore
+sudo nixos-rebuild switch --flake /etc/nixos#valdore
+qtile check -c /home/tim/.config/qtile/config.py
+foot --check-config
+tmux -f /home/tim/.config/tmux/tmux.conf new-session -d -s verify true
+docker version
+kubectl version --client=true
+helm version --short
+tofu version
+```

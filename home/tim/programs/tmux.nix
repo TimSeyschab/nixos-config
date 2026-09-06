@@ -134,13 +134,22 @@ in
   xdg.configFile."tmux/README.md".text = ''
     # tmux workflow
 
-    Prefix remains `Ctrl-b`.
+    Prefix remains `Ctrl-b`. The configuration is optimized for long-running
+    local work, remote maintenance sessions and quick project workspaces.
 
     ## Commands
 
     - `tmux-work [name]`: attach or create a local working session.
     - `tmux-remote <host> [session]`: open a local tmux wrapper around a remote tmux session.
     - `tmux-longrun <session> <command> [args...]`: run a long command inside a named session.
+
+    ## Common workflows
+
+    - Start daily work: `tmux-work work`
+    - Keep a build alive: `tmux-longrun build nixos-rebuild build --flake /etc/nixos#valdore`
+    - Attach to a remote ops session: `tmux-remote host ops`
+    - List sessions: `tmux list-sessions`
+    - Detach from a session: `Ctrl-b d`
 
     ## Keys
 
@@ -152,5 +161,13 @@ in
     - `Ctrl-b [` then `v`/`y`: vi copy-mode selection and copy to Wayland clipboard.
     - `Ctrl-b Ctrl-s`: save session state with tmux-resurrect.
     - `Ctrl-b Ctrl-r`: restore session state with tmux-resurrect.
+
+    ## Plugins
+
+    - `sensible`: conservative tmux defaults.
+    - `yank`: copy-mode integration.
+    - `resurrect`: explicit session save and restore.
+    - `continuum`: periodic session saves.
+    - `vim-tmux-navigator`: consistent pane movement with Vim-style bindings.
   '';
 }
