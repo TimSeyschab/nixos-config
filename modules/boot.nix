@@ -7,6 +7,6 @@
       efi.canTouchEfiVariables = true;
     };
 
-    kernelPackages = pkgs.linuxPackages;
+    kernelPackages = pkgs.linuxPackages_6_12;
   };
 }
