@@ -30,6 +30,7 @@ in
   services.displayManager.sessionPackages = [
     qtileWaylandSession
   ];
+  services.displayManager.defaultSession = "qtile-wayland";
 
   services.displayManager.sddm = {
     enable = true;

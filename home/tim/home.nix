@@ -3,10 +3,14 @@
 {
   imports = [
     ./apps/citrix.nix
+    ./apps/engineering.nix
+    ./apps/jetbrains.nix
     ./desktop/foot.nix
     ./desktop/mako.nix
     ./desktop/qtile.nix
     ./desktop/wofi.nix
+    ./programs/tmux.nix
+    ./shell/aliases.nix
   ];
 
   home.username = "tim";

@@ -9,10 +9,8 @@ let
     fi
 
     sleep 1
-    ${pkgs.wlr-randr}/bin/wlr-randr | ${pkgs.gawk}/bin/awk '/^[^[:space:]]/ { print $1 }' | while read -r output; do
-      [ -n "$output" ] || continue
-      ${pkgs.wlr-randr}/bin/wlr-randr --output "$output" --scale 1.25 || true
-    done
+    ${pkgs.wlr-randr}/bin/wlr-randr --output DP-1 --scale 1.25 --pos 0,0 || true
+    ${pkgs.wlr-randr}/bin/wlr-randr --output HDMI-A-1 --scale 1 --pos 3072,0 || true
   '';
 
   screenshotArea = pkgs.writeShellScript "qtile-screenshot-area" ''
@@ -38,6 +36,81 @@ let
     ${pkgs.grim}/bin/grim "$file"
     ${pkgs.wl-clipboard}/bin/wl-copy < "$file"
   '';
+
+  powerMenu = pkgs.writeShellScript "qtile-power-menu" ''
+    set -eu
+
+    choice="$(printf "Lock\nSuspend\nReboot\nPoweroff\nLogout\n" | ${pkgs.wofi}/bin/wofi --dmenu --prompt Power || true)"
+
+    case "$choice" in
+      Lock)
+        ${pkgs.swaylock}/bin/swaylock -f -c 101418
+        ;;
+      Suspend)
+        ${pkgs.swaylock}/bin/swaylock -f -c 101418 &
+        sleep 1
+        ${pkgs.systemd}/bin/systemctl suspend
+        ;;
+      Reboot)
+        ${pkgs.systemd}/bin/systemctl reboot
+        ;;
+      Poweroff)
+        ${pkgs.systemd}/bin/systemctl poweroff
+        ;;
+      Logout)
+        /run/current-system/sw/bin/qtile cmd-obj -o root -f shutdown || true
+        ;;
+    esac
+  '';
+
+  lockAndSuspend = pkgs.writeShellScript "qtile-lock-and-suspend" ''
+    set -eu
+
+    ${pkgs.swaylock}/bin/swaylock -f -c 101418 &
+    sleep 1
+    ${pkgs.systemd}/bin/systemctl suspend
+  '';
+
+  networkStatus = pkgs.writeShellScript "qtile-network-status" ''
+    set -eu
+
+    ${pkgs.networkmanager}/bin/nmcli -t -f DEVICE,TYPE,STATE device status \
+      | ${pkgs.gawk}/bin/awk -F: '$3 == "connected" && $2 != "loopback" { print toupper($2) " " $1; found=1; exit } END { if (!found) print "NET down" }'
+  '';
+
+  dockerStatus = pkgs.writeShellScript "qtile-docker-status" ''
+    set -eu
+
+    if ! ${pkgs.docker}/bin/docker info >/dev/null 2>&1; then
+      echo "DKR off"
+      exit 0
+    fi
+
+    running="$(${pkgs.docker}/bin/docker ps -q 2>/dev/null | ${pkgs.coreutils}/bin/wc -l)"
+    echo "DKR $running"
+  '';
+
+  kubeStatus = pkgs.writeShellScript "qtile-kube-status" ''
+    set -eu
+
+    context="$(${pkgs.kubectl}/bin/kubectl config current-context 2>/dev/null || true)"
+    if [ -z "$context" ]; then
+      echo "K8S noctx"
+      exit 0
+    fi
+
+    namespace="$(${pkgs.kubectl}/bin/kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null || true)"
+    [ -n "$namespace" ] || namespace="default"
+    echo "K8S $context/$namespace"
+  '';
+
+  wallpaper = pkgs.runCommand "valdore-wallpaper.png" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
+    ${pkgs.imagemagick}/bin/magick -size 5120x2160 gradient:'#101418'-'#16212b' \
+      -fill '#61afef22' -draw 'rectangle 0,1680 5120,1710' \
+      -fill '#98c37918' -draw 'rectangle 0,1718 5120,1730' \
+      -fill '#e5c07b14' -draw 'rectangle 0,1736 5120,1742' \
+      $out
+  '';
 in
 {
   home.packages = with pkgs; [
@@ -45,6 +118,7 @@ in
     grim
     slurp
     swaybg
+    swayidle
     swaylock
     wl-clipboard
     wlr-randr
@@ -74,12 +148,21 @@ in
         "border": "#3b4252",
     }
 
+    def sh(command):
+        try:
+            return subprocess.check_output(command, shell=True, text=True, timeout=2).strip()
+        except Exception:
+            return "-"
+
     @hook.subscribe.startup_once
     def autostart():
         for command in (
             "${applyDisplayScale}",
-            "${pkgs.swaybg}/bin/swaybg -c '#101418' -m fill",
+            "${pkgs.swaybg}/bin/swaybg -i ${wallpaper} -m fill",
             "${pkgs.mako}/bin/mako",
+            "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator",
+            "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1",
+            "${pkgs.swayidle}/bin/swayidle -w timeout 600 '${pkgs.swaylock}/bin/swaylock -f -c 101418' timeout 900 '${pkgs.systemd}/bin/systemctl suspend' before-sleep '${pkgs.swaylock}/bin/swaylock -f -c 101418'",
         ):
             subprocess.Popen(command, shell=True)
 
@@ -93,7 +176,9 @@ in
         Key([mod], "space", lazy.layout.next(), desc="Next window"),
         Key([mod], "Tab", lazy.next_layout(), desc="Next layout"),
         Key([mod, "control"], "r", lazy.reload_config(), desc="Reload Qtile"),
-        Key([mod, "control"], "q", lazy.shutdown(), desc="Quit Qtile"),
+        Key([mod, "control"], "q", lazy.spawn("${powerMenu}"), desc="Power menu"),
+        Key([mod], "Escape", lazy.spawn("${pkgs.swaylock}/bin/swaylock -f -c 101418"), desc="Lock"),
+        Key([mod, "shift"], "s", lazy.spawn("${lockAndSuspend}"), desc="Suspend"),
 
         Key([mod], "h", lazy.layout.left(), desc="Focus left"),
         Key([mod], "l", lazy.layout.right(), desc="Focus right"),
@@ -153,34 +238,39 @@ in
     )
     extension_defaults = widget_defaults.copy()
 
-    screens = [
-        Screen(
-            top=bar.Bar(
-                [
-                    widget.GroupBox(
-                        active=colors["fg"],
-                        inactive=colors["muted"],
-                        highlight_method="line",
-                        highlight_color=[colors["bg"], colors["bg_alt"]],
-                        this_current_screen_border=colors["blue"],
-                        this_screen_border=colors["green"],
-                        urgent_border=colors["red"],
-                        rounded=False,
-                        padding=5,
-                    ),
-                    widget.CurrentLayout(foreground=colors["yellow"]),
-                    widget.WindowName(empty_group_string="", max_chars=120),
-                    widget.Spacer(length=bar.STRETCH),
-                    widget.CPU(format="CPU {load_percent}%"),
-                    widget.Memory(format="RAM {MemUsed:.0f}{mm}"),
-                    widget.PulseVolume(fmt="VOL {}"),
-                    widget.Clock(format="%a %d.%m. %H:%M"),
-                ],
-                36,
-                background=colors["bg"],
-            ),
+    def make_bar():
+        return bar.Bar(
+            [
+                widget.GroupBox(
+                    active=colors["fg"],
+                    inactive=colors["muted"],
+                    highlight_method="line",
+                    highlight_color=[colors["bg"], colors["bg_alt"]],
+                    this_current_screen_border=colors["blue"],
+                    this_screen_border=colors["green"],
+                    urgent_border=colors["red"],
+                    rounded=False,
+                    padding=5,
+                ),
+                widget.CurrentLayout(foreground=colors["yellow"]),
+                widget.WindowName(empty_group_string="", max_chars=120),
+                widget.Spacer(length=bar.STRETCH),
+                widget.GenPollText(func=lambda: sh("${networkStatus}"), update_interval=10, foreground=colors["green"]),
+                widget.GenPollText(func=lambda: sh("${dockerStatus}"), update_interval=15, foreground=colors["blue"]),
+                widget.GenPollText(func=lambda: sh("${kubeStatus}"), update_interval=30, foreground=colors["yellow"]),
+                widget.StatusNotifier(),
+                widget.CPU(format="CPU {load_percent}%"),
+                widget.Memory(format="RAM {MemUsed:.0f}{mm}"),
+                widget.PulseVolume(fmt="VOL {}"),
+                widget.Clock(format="%a %d.%m. %H:%M"),
+            ],
+            36,
             background=colors["bg"],
         )
+
+    screens = [
+        Screen(top=make_bar(), background=colors["bg"]),
+        Screen(top=make_bar(), background=colors["bg"]),
     ]
 
     mouse = [

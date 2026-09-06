@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../../modules/development.nix
       ../../modules/nvidia.nix
       ../../modules/desktop.nix
     ];
@@ -67,7 +68,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.tim = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "networkmanager" "docker" ]; # Enable sudo and local service access for the user.
     packages = with pkgs; [
       tree
     ];
@@ -128,4 +129,3 @@
   system.stateVersion = "26.05"; # Did you read the comment?
 
 }
-
