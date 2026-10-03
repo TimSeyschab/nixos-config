@@ -16,7 +16,7 @@ This repository contains the NixOS and Home Manager configuration for `valdore`.
 - `modules/audio.nix`: PipeWire audio stack.
 - `modules/desktop.nix`: SDDM, Qtile Wayland and GNOME sessions, and desktop portals.
 - `modules/nvidia.nix`: NVIDIA driver and graphics settings.
-- `modules/development.nix`: Docker daemon, Compose, Python and Node.js.
+- `modules/development.nix`: Docker daemon and Compose.
 - `modules/gaming.nix`: Steam, Steam Gamescope session and GameMode.
 - `modules/packages.nix`: baseline system packages.
 - `modules/secrets.nix`: sops-nix foundation and secret tooling.
@@ -37,8 +37,7 @@ and install IntelliJ IDEA Ultimate there; IDEs installed by Toolbox should also
 be started through Toolbox.
 
 Docker is configured in the classic mode with the system Docker daemon and the
-`tim` user in the `docker` group. Python 3, Node.js and Docker Compose are
-available system-wide.
+`tim` user in the `docker` group. Docker Compose is available system-wide.
 
 Secrets are managed through sops-nix. The host SSH Ed25519 key is configured as
 an age identity for decrypting machine secrets during activation. Commit only
@@ -74,7 +73,8 @@ with `readlink -f`, check the resolved store path with `nix store verify
 --no-trust <store-path>`, and restore that path with `sudo nix store repair
 <store-path>`. Do not edit files in `/nix/store` directly.
 
-Kubernetes, Go and Java development tooling is installed through Home Manager.
+Kubernetes, Go, Java, Python 3 and Node.js development tooling is installed
+through Home Manager in `home/tim/apps/engineering.nix`.
 Java uses JDK 25 as the current LTS line and exports `JAVA_HOME` accordingly.
 Use `kube-doctor` for local cluster diagnostics, `kube-validate` for Helm,
 Kustomize or manifest validation, `kind-up`/`kind-down` for disposable local

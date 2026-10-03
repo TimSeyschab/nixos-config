@@ -154,7 +154,9 @@ in
     kindUp
     maven
     minikube
+    nodejs
     opentofu
+    python3
     skaffold
     spring-boot-cli
     stern
