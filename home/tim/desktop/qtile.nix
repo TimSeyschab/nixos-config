@@ -120,21 +120,25 @@ let
     exec ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1
   '';
 
-  wallpaperDp1 = pkgs.runCommand "valdore-wallpaper-dp1.png" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
-    ${pkgs.imagemagick}/bin/magick ${./wallpapers/wallhaven-e8z81r.png} \
-      -resize 3840x2160^ -gravity center -extent 3840x2160 \
-      -fill '${hex "base00"}' -colorize 32% \
-      -modulate 68,84,100 \
-      $out
-  '';
+  wallpaperDp1 =
+    pkgs.runCommand "valdore-wallpaper-dp1.png" { nativeBuildInputs = [ pkgs.imagemagick ]; }
+      ''
+        ${pkgs.imagemagick}/bin/magick ${./wallpapers/wallhaven-e8z81r.png} \
+          -resize 3840x2160^ -gravity center -extent 3840x2160 \
+          -fill '${hex "base00"}' -colorize 32% \
+          -modulate 68,84,100 \
+          $out
+      '';
 
-  wallpaperHdmi = pkgs.runCommand "valdore-wallpaper-hdmi.png" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
-    ${pkgs.imagemagick}/bin/magick ${./wallpapers/wallhaven-mlqlmy.png} \
-      -resize 1920x1080^ -gravity center -extent 1920x1080 \
-      -fill '${hex "base00"}' -colorize 32% \
-      -modulate 68,84,100 \
-      $out
-  '';
+  wallpaperHdmi =
+    pkgs.runCommand "valdore-wallpaper-hdmi.png" { nativeBuildInputs = [ pkgs.imagemagick ]; }
+      ''
+        ${pkgs.imagemagick}/bin/magick ${./wallpapers/wallhaven-mlqlmy.png} \
+          -resize 1920x1080^ -gravity center -extent 1920x1080 \
+          -fill '${hex "base00"}' -colorize 32% \
+          -modulate 68,84,100 \
+          $out
+      '';
 
   qtileTheme = pkgs.writeText "qtile-theme.py" ''
     palette = {

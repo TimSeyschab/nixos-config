@@ -12,9 +12,11 @@
     nix-direnv
     ripgrep
     starship
+
     zoxide
   ];
 
+  home.sessionPath = [ "$HOME/.local/bin" ];
   programs = {
     direnv = {
       enable = true;
@@ -79,6 +81,7 @@
         setopt interactive_comments
         setopt no_beep
         setopt prompt_subst
+        export PATH="$HOME/.local/bin:$PATH"
 
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu select

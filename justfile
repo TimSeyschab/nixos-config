@@ -24,7 +24,7 @@ fmt:
 
 lint:
     statix check --ignore "**/hardware-configuration.nix" {{flake}}
-    deadnix --fail --exclude {{flake}}/hosts/valdore/hardware-configuration.nix {{flake}}
+    deadnix --fail --exclude {{flake}}/hosts/valdore/hardware-configuration.nix -- {{flake}}
 
 diff:
     nvd diff /run/current-system {{flake}}/result
