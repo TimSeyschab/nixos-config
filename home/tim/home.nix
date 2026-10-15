@@ -26,7 +26,6 @@
       networkmanagerapplet
       pavucontrol
       playerctl
-      waybar
       xdg-utils
     ];
 

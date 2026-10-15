@@ -1,13 +1,9 @@
 { pkgs, ... }:
 
 let
-  qtileExtras = pkgs.python3Packages.qtile-extras;
-
   qtile = pkgs.python3Packages.qtile.override {
-      extraPackages = [
-        qtileExtras
-      ];
-    };
+    extraPackages = [ pkgs.python3Packages.qtile-extras ];
+  };
 
   qtileWaylandSession =
     (pkgs.writeTextDir "share/wayland-sessions/qtile-wayland.desktop" ''
@@ -41,18 +37,7 @@ in
 
   programs.firefox.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    qtile
-    foot
-    alacritty
-    waybar
-    wofi
-    wl-clipboard
-    grim
-    slurp
-    swaybg
-    xdg-utils
-  ];
+  environment.systemPackages = [ qtile ];
 
   xdg.portal = {
     enable = true;

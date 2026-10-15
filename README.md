@@ -137,8 +137,8 @@ regression report was closed after these findings:
 ## Desktop sessions
 
 SDDM offers Qtile (Wayland) as the default session and GNOME as an alternative.
-Qtile and qtile-extras are both overridden to the `v0.36.0` release tags in
-`modules/desktop.nix`; update them together and validate the Qtile configuration.
+Qtile and qtile-extras use the versions provided together by nixpkgs.
+The custom session in `modules/desktop.nix` explicitly starts the Wayland backend.
 
 ## Shortcuts and aliases
 
