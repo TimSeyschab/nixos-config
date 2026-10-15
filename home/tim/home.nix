@@ -5,6 +5,7 @@
     ./apps/citrix.nix
     ./apps/engineering.nix
     ./apps/jetbrains.nix
+    ./apps/godot.nix
     ./desktop/foot.nix
     ./desktop/mako.nix
     ./desktop/qtile.nix
