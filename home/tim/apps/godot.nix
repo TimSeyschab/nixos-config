@@ -2,6 +2,6 @@
 
 {
   home.packages = [
-    pkgs.godot
+    pkgs.godot_4_7
   ];
 }
